@@ -273,7 +273,116 @@ A estrutura hierárquica possibilita representar cada **célula de manufatura co
 
 ---
 
-# 6. Conclusão
+# 6. Desenvolvimento do Modelo (HCPN no CPN Tools)
+
+Nesta seção é apresentado o desenvolvimento prático do sistema utilizando **Redes de Petri Coloridas Hierárquicas (HCPN)** na ferramenta **CPN Tools**. A modelagem foi estruturada de forma hierárquica, permitindo representar cada célula como um módulo independente e reutilizável, além de um nível superior responsável pela integração do sistema completo.
+
+---
+
+## 6.1 Modelo de uma Célula de Manufatura
+
+A Figura abaixo representa o modelo interno de uma célula de manufatura. Lembrando que são 3 células
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/1bc7453d-66d2-4bd9-85c3-0b6a391403a9" width="800px" />
+</div>
+
+Cada célula é composta por:
+
+- Dois fluxos de processamento independentes (**M1 e M2**)
+- Estados representando as etapas: `idle`, `processing` e `done`
+- Transições de início (`Start`) e finalização (`finish`)
+- Ações de coleta (`Pick_M1` e `Pick_M2`)
+- Um robô responsável pelo transporte (`Rob_f`)
+- Um buffer com controle de capacidade (`Buf_free`)
+
+O fluxo ocorre da seguinte forma:
+
+1. A máquina inicia no estado `idle`.
+2. Ao receber o comando `Start`, passa para `processing`.
+3. Após o evento `finish`, a peça fica disponível em `done`.
+4. O robô realiza a coleta (`Pick`), transporta e deposita no buffer (`drop_buf`).
+5. O buffer controla a ocupação através do lugar `Buf_free`.
+
+A presença de marcações (tokens) nos lugares indica o estado atual do sistema, permitindo simular o comportamento dinâmico da célula.
+
+---
+
+## 6.2 Modelo do Sistema de Transporte entre Células
+
+A próxima figura representa o modelo responsável pela integração das três células e pelo transporte das peças até o buffer final da fábrica.
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/b8fb3450-52bc-4d96-8c06-e8c7248b1083" width="800px" />
+</div>
+
+Nesse modelo, observa-se:
+
+- Entradas das três células (`in_c1`, `in_c2`, `in_c3`)
+- Um robô compartilhado (`F_rob_f`) responsável pela coleta
+- Transições de coleta (`pick1`, `pick2`, `pick3`)
+- Estados intermediários de transporte (`F_lo1`, `F_lo2_A`, `F_lo2_B`)
+- Controle de capacidade do buffer final (`F_buf_f`)
+
+O robô da fábrica pode:
+
+- Coletar peças de diferentes células
+- Transportar múltiplas peças simultaneamente (até o limite definido)
+- Depositar no buffer final através das transições `drop1` e `drop2`
+
+A modelagem com cores permite diferenciar as peças provenientes de cada célula, garantindo rastreabilidade dentro do sistema.
+
+---
+
+## 6.3 Modelo Hierárquico do Sistema Completo
+
+A figura a seguir apresenta o nível superior do modelo, onde as três células são integradas.
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/cbcc31b8-8381-4a31-98ac-baee4af16384" width="800px" />
+</div>
+
+
+Neste nível, cada célula é representada como um **módulo hierárquico**:
+
+- `Cell1`
+- `Cell2`
+- `Cell3`
+
+As saídas de cada célula (`Cel_out1`, `Cel_out2`, `Cel_out3`) são conectadas ao sistema de saída da fábrica (`Fact_Out`).
+
+Essa abordagem permite:
+
+- Reutilização do modelo de célula
+- Redução da complexidade visual
+- Melhor organização do sistema
+
+---
+
+## 6.4 Considerações sobre a Modelagem
+
+Durante o desenvolvimento do modelo, foram considerados diversos aspectos importantes:
+
+- **Controle de capacidade dos buffers**, evitando overflow
+- **Sincronização entre máquinas e robôs**
+- **Restrição de capacidade dos robôs (1 peça na célula e até 2 no sistema global)**
+- **Modelagem modular utilizando hierarquia**
+- **Uso de cores para diferenciar tokens (peças)**
+
+Além disso, a modelagem permite simular cenários críticos como:
+
+- Bloqueio por buffers cheios
+- Espera por disponibilidade de robôs
+- Concorrência entre células
+
+## 7. Vídeo Demonstrativo do Funcionamento
+
+Com o objetivo de complementar a descrição teórica e a modelagem apresentada ao longo do projeto, foi desenvolvido um **vídeo demonstrativo** que ilustra o funcionamento da célula de manufatura automatizada em operação.
+
+🔗 **Acesse o vídeo demonstrativo:**  
+
+
+# 8. Conclusão
 
 Este projeto apresentou a modelagem de um **sistema de manufatura automatizado composto por três células de produção**, cada uma contendo duas máquinas de processamento, um robô de transporte interno e um buffer de saída.
 
