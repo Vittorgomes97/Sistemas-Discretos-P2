@@ -379,7 +379,7 @@ Além disso, a modelagem permite simular cenários críticos como:
 
 Com o objetivo de complementar a descrição teórica e a modelagem apresentada ao longo do projeto, foi desenvolvido um **vídeo demonstrativo** que ilustra o funcionamento da célula de manufatura automatizada em operação.
 
-🔗 **Acesse o vídeo demonstrativo:**  
+🔗 **Acesse o vídeo demonstrativo:** https://www.youtube.com/watch?v=rdBp-LoTi5Y 
 
 
 # 8. Conclusão
